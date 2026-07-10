@@ -19,6 +19,25 @@ public class Seal : MonoBehaviour
     [SerializeField] private float groundedRadius = 0.1f;
     [SerializeField] private LayerMask groundedLayer;
 
+    [Header("Visuals")]
+    [SerializeField] private Transform visualTransform;
+    [SerializeField] private float visualRotateLerpSpeed = 15f;
+    [SerializeField] private float maxAngle = 90;
+    [SerializeField] private float zAngleOffset = -135;
+    private float baseAngle;
+
+    void Awake()
+    {
+        baseAngle = transform.eulerAngles.z;
+    }
+
+    void Update()
+    {
+        Glide();
+        StopGliding();
+        RotateVisual();
+    }
+
     #region Input
 
     void OnEnable()
@@ -45,15 +64,7 @@ public class Seal : MonoBehaviour
     }
 
     #endregion
-
     #region Movement
-
-    void Update()
-    {
-        Glide();
-        StopGliding();
-    }
-
 
     private void StartGlide()
     {
@@ -83,8 +94,16 @@ public class Seal : MonoBehaviour
     private bool IsGrounded() => Physics2D.OverlapCircle(groundedPoint.position, groundedRadius, groundedLayer);
 
     #endregion
-
     #region Visual
+
+    private void RotateVisual()
+    {
+        float value = Mathf.InverseLerp(glidingMaxDownwardsVelocity, glidingMaxUpwardsVelocity, rb.linearVelocityY);
+        float zAngle = (maxAngle * value) + zAngleOffset;
+
+        Quaternion targetAngle = Quaternion.Euler(visualTransform.eulerAngles.x, visualTransform.eulerAngles.y, zAngle);
+        visualTransform.rotation = Quaternion.Lerp(visualTransform.rotation, targetAngle, visualRotateLerpSpeed * Time.deltaTime);
+    }
 
     void OnDrawGizmos()
     {
