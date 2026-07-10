@@ -28,9 +28,14 @@ public class Sea : MonoBehaviour
     [SerializeField] private List<UVScroll> waveUVScrolls = new List<UVScroll>();
     private float currentVelocityMultiplier = 1;
 
-    void Awake()
+    void OnEnable()
     {
         GameManager.OnVelocityChanged += OnVelocityChanged;
+    }
+
+    void OnDisable()
+    {
+        GameManager.OnVelocityChanged -= OnVelocityChanged;
     }
 
     void Update()

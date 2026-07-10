@@ -4,21 +4,22 @@ public class SaveSystem : MonoBehaviour
 {
     public class SaveData
     {
-        public int score;
+        public int highscore;
+
+        public SaveData(int score){
+            highscore = score;
+        }
     }
     
     public static void SaveGame(SaveData newSaveData)
     {
         SaveData saveData = GetGameData();
-        if(newSaveData.score > saveData.score) PlayerPrefs.SetInt("Highscore", newSaveData.score);
+        if(newSaveData.highscore > saveData.highscore) PlayerPrefs.SetInt("Highscore", newSaveData.highscore);
     }
 
     public static SaveData GetGameData()
     {
-        SaveData saveData = new SaveData(){
-            score = PlayerPrefs.GetInt("Highscore", 0),
-        };
-
+        SaveData saveData = new SaveData(PlayerPrefs.GetInt("Highscore", 0));
         return saveData;
     }
 }
