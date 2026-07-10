@@ -19,10 +19,7 @@ public class Seal : MonoBehaviour
     [SerializeField] private float groundedRadius = 0.1f;
     [SerializeField] private LayerMask groundedLayer;
 
-    void Awake()
-    {
-        Reset();
-    }
+    #region Input
 
     void OnEnable()
     {
@@ -36,17 +33,6 @@ public class Seal : MonoBehaviour
         SealInput.OnekeyStopped -= StopPressingKey;
     }
 
-    private void Reset()
-    {
-        isGliding = false;
-    }
-
-    void Update()
-    {
-        Glide();
-        StopGliding();
-    }
-
     private void StartPressingKey()
     {
         StartGlide();
@@ -58,6 +44,17 @@ public class Seal : MonoBehaviour
         isBeingHeld = false;
     }
 
+    #endregion
+
+    #region Movement
+
+    void Update()
+    {
+        Glide();
+        StopGliding();
+    }
+
+
     private void StartGlide()
     {
         if(!isGliding) rb.linearVelocityY = 0;
@@ -66,7 +63,6 @@ public class Seal : MonoBehaviour
 
     private void Glide()
     {
-        rb.bodyType = !isGliding ? RigidbodyType2D.Dynamic : RigidbodyType2D.Kinematic;
         if (!isGliding) return;
 
         glidingTargetVelocity = isBeingHeld ? glidingMaxUpwardsVelocity : glidingMaxDownwardsVelocity;
@@ -77,14 +73,26 @@ public class Seal : MonoBehaviour
 
     private void StopGliding()
     {
-        if(!isBeingHeld && IsGrounded()) isGliding = false;
+        if(!isBeingHeld && IsGrounded())
+        {
+            isGliding = false;
+            rb.linearVelocityY = 0;
+        }
     }
 
     private bool IsGrounded() => Physics2D.OverlapCircle(groundedPoint.position, groundedRadius, groundedLayer);
 
+    #endregion
+
+    #region Visual
+
     void OnDrawGizmos()
     {
         if(groundedPoint == null) return;
+
+        Gizmos.color = IsGrounded() ? Color.green : Color.red;
         Gizmos.DrawWireSphere(groundedPoint.position, groundedRadius);
     }
+
+    #endregion
 }
