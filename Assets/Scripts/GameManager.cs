@@ -3,22 +3,57 @@ using System.Collections;
 using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
-{    
+{
+    public enum GameState
+    {
+        Menu,
+        Playing,
+        Death,
+        GameOver,
+    }
+    
     public static event Action OnGameReset;
     public static event Action OnGameStart;
     public static event Action OnGameOver;
 
-    protected override void Awake()
+    private GameState currentGameState = GameState.Menu;
+
+    void OnEnable()
     {
-        base.Awake();
-        
-        Fish.OnPickupFish += IncreaseScore;
+        SealInput.OnekeyPressed += SwitchGameState;
+        Fish.OnPickupFish += OnPickupFish;
+        Trash.OnPickupTrash += IncreaseHunger;
+    }
+
+    void OnDisable()
+    {
+        SealInput.OnekeyPressed -= SwitchGameState;
+        Fish.OnPickupFish -= OnPickupFish;
+        Trash.OnPickupTrash -= IncreaseHunger;
     }
 
     void Start()
     {
         ResetGame();
-        StartGame();
+    }
+
+    void Update()
+    {
+        if(currentGameState != GameState.Playing) return;
+
+        HandleHunger();
+    }
+
+    private void SwitchGameState()
+    {
+        if(currentGameState == GameState.Menu) StartGame();
+        else if(currentGameState == GameState.GameOver) ResetGame();
+    }
+
+    private void OnPickupFish(Fish fish)
+    {
+        IncreaseScore(fish.Points);
+        IncreaseHunger(fish.Hunger);
     }
 
     #region Game's Velocity
@@ -78,15 +113,46 @@ public class GameManager : Singleton<GameManager>
     }
 
     #endregion
+    #region Hunger
+
+    [SerializeField] private float maxHunger = 10;
+    [SerializeField] private float hungerDecrease = 1;
+    public float MaxHunger => maxHunger;
+    public float Hunger
+    {
+        get => hunger;
+        set => hunger = Mathf.Clamp(value, 0, maxHunger);
+    }
+    private float hunger;
+
+    private void HandleHunger()
+    {
+        Hunger -= hungerDecrease * (CurrentVelocity / 2) * Time.deltaTime;
+        if(Hunger == 0) StopGame();
+    }
+
+    private void IncreaseHunger(float hunger)
+    {
+        Hunger += hunger;
+    }
+
+    #endregion
 
     private void ResetGame()
     {
+        StopAllCoroutines();
+        currentGameState = GameState.Menu;
+
         CurrentVelocity = menuVelocity;
+        Hunger = MaxHunger;
+
         OnGameReset?.Invoke();
     }
 
     private void StartGame()
     {
+        currentGameState = GameState.Playing;
+        
         Score = 0;
 
         StartCoroutine(IncreaseVelocity());
@@ -96,8 +162,17 @@ public class GameManager : Singleton<GameManager>
 
     private void StopGame()
     {
-        SaveSystem.SaveGame(new SaveSystem.SaveData(Score));
+        currentGameState = GameState.Death;
 
+        SaveSystem.SaveGame(new SaveSystem.SaveData(Score));
         OnGameOver?.Invoke();
+
+        StartCoroutine(DeathTransition());
+    }
+
+    private IEnumerator DeathTransition()
+    {
+        yield return new WaitForSeconds(2);
+        currentGameState = GameState.GameOver;
     }
 }

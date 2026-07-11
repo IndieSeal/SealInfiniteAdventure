@@ -41,17 +41,6 @@
                 },
                 {
                     "name": "",
-                    "id": "2579f206-9272-405d-a1d8-a04f43c68f17",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "Press",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "8a069330-da12-4f42-99ff-8156d502e93d",
                     "path": "<Touchscreen>/Press",
                     "interactions": "",

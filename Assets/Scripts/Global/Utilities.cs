@@ -13,4 +13,6 @@ public static class Utilities
         return myList[myList.GetRandomIndexOf()];
     }
     public static int GetRandomIndexOf<T>(this List<T> myList) => Random.Range(0, myList.Count);
+
+    public static Vector2 GetRandomPoint(Vector2 start, Vector2 end) => new Vector2(Random.Range(start.x, end.x), Random.Range(start.y, end.y));
 }

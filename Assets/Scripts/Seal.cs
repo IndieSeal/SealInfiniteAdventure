@@ -1,9 +1,15 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class Seal : MonoBehaviour
 {
+    public static event Action OnHitGround;
+    
     [Header("Components")]
     [SerializeField] private Rigidbody2D rb;
+    private float originalY;
+    private bool isDead;
 
     [Header("Gliding")]
     [SerializeField] private float glidingVelocity = 1.4f;
@@ -26,6 +32,11 @@ public class Seal : MonoBehaviour
     [SerializeField] private float maxAngle = 90;
     [SerializeField] private float zAngleOffset = -135;
 
+    void Awake()
+    {
+        originalY = transform.position.y;
+    }
+
     void Update()
     {
         Glide();
@@ -39,22 +50,63 @@ public class Seal : MonoBehaviour
     {
         SealInput.OnekeyPressed += StartPressingKey;
         SealInput.OnekeyStopped += StopPressingKey;
+
+        GameManager.OnGameReset += OnReset;
+        GameManager.OnGameStart += OnStart;
+        GameManager.OnGameOver += OnDeath;
     }
 
     void OnDisable()
     {
         SealInput.OnekeyPressed -= StartPressingKey;
         SealInput.OnekeyStopped -= StopPressingKey;
+
+        GameManager.OnGameReset -= OnReset;
+        GameManager.OnGameStart -= OnStart;
+        GameManager.OnGameOver -= OnDeath;
+    }
+
+    private void OnReset()
+    {
+        isDead = false;
+        isGliding = false;
+        StartCoroutine(GlideToDefault());
+    }
+
+    private void OnStart()
+    {
+        StopAllCoroutines();
+    }
+
+    private IEnumerator GlideToDefault()
+    {
+        while (true)
+        {
+            glidingTargetVelocity = originalY - transform.position.y;
+            rb.linearVelocityY = glidingTargetVelocity * glidingVelocity;
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
+    private void OnDeath()
+    {
+        isDead = true;
+        isBeingHeld = false;
+        isGliding = true;
     }
 
     private void StartPressingKey()
     {
+        if(isDead) return;
+
         StartGlide();
         isBeingHeld = true;
     }
 
     private void StopPressingKey()
     {
+        if(isDead) return;
+
         isBeingHeld = false;
     }
 
@@ -62,7 +114,7 @@ public class Seal : MonoBehaviour
     #region Movement
 
     private void StartGlide()
-    {
+    {        
         if(!isGliding) rb.linearVelocityY = 0;
         isGliding = true;
     }
@@ -81,8 +133,9 @@ public class Seal : MonoBehaviour
 
     private void StopGliding()
     {
-        if(!isBeingHeld && IsGrounded())
+        if(!isBeingHeld && isGliding && IsGrounded())
         {
+            OnHitGround?.Invoke();
             isGliding = false;
             rb.linearVelocityY = 0;
         }

@@ -3,19 +3,49 @@ using System.Collections.Generic;
 using UnityEngine;
 using uPools;
 
+[System.Serializable]
+public class SpawnContent
+{
+    public List<GameObject> prefabs = new List<GameObject>();
+
+    [Header("Spawn Delay")]
+    [Tooltip("If true, the sea's velocity will affect the spawning time of this")] public bool seaAffected = true;
+    [Space]
+    public float minSpawnTime = 1;
+    public float maxSpawnTime = 2;
+
+    public GameObject Prefab => prefabs.GetRandomOf();
+    public float Delay => Random.Range(minSpawnTime, maxSpawnTime) / (!seaAffected ? 1 : GameManager.Instance.CurrentVelocity);
+}
+
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> fishPrefabs = new List<GameObject>();
+    [Header("Spawning")]
+    [SerializeField] private Transform startTransform;
+    [SerializeField] private Transform endTransform;
+    
+    [SerializeField] private List<SpawnContent> spawns = new List<SpawnContent>();
+    private List<GameObject> instances = new List<GameObject>();
 
-    void Awake()
+    void OnEnable()
     {
         GameManager.OnGameStart += StartSpawning;
         GameManager.OnGameOver += EndSpawning;
+
+        Despawner.OnDespawnObject += DespawnObject;
+    }
+
+    void OnDisable()
+    {
+        GameManager.OnGameStart -= StartSpawning;
+        GameManager.OnGameOver -= EndSpawning;
+
+        Despawner.OnDespawnObject -= DespawnObject;
     }
 
     private void StartSpawning()
     {
-        StartCoroutine(SpawnFishCoroutine());
+        foreach(SpawnContent spawn in spawns) StartCoroutine(SpawnerCoroutine(spawn));
     }
 
     private void EndSpawning()
@@ -23,12 +53,17 @@ public class Spawner : MonoBehaviour
         StopAllCoroutines();
     }
 
-    private IEnumerator SpawnFishCoroutine()
+    private IEnumerator SpawnerCoroutine(SpawnContent spawn)
     {
         while (true)
         {
-            SharedGameObjectPool.Rent(fishPrefabs.GetRandomOf(), transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(5);
+            instances.Add(SharedGameObjectPool.Rent(spawn.Prefab, Utilities.GetRandomPoint(startTransform.position, endTransform.position), Quaternion.identity));
+            yield return new WaitForSeconds(spawn.Delay);
         }
+    }
+
+    private void DespawnObject(GameObject go)
+    {
+        if(instances.Contains(go)) SharedGameObjectPool.Return(go);
     }
 }

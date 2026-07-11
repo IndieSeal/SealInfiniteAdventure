@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class Trash : MonoBehaviour, IPickable
 {
-    public static event Action<int> OnPickupTrash;
+    public static event Action<float> OnPickupTrash;
     
-    [SerializeField] private int damageOnPickup = 2;
+    [SerializeField] private float damageOnPickup = -2;
     
     public void OnPickup()
     {
