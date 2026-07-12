@@ -5,11 +5,14 @@ using UnityEngine;
 public class Seal : MonoBehaviour
 {
     public static event Action OnHitGround;
+ 
+    private const string ANIMATION_STARVED_BOOL = "IsStarved";
     
     [Header("Components")]
+    [SerializeField] private Animator animator;
     [SerializeField] private Rigidbody2D rb;
     private float originalY;
-    private bool isDead;
+    private bool isStarved;
 
     [Header("Gliding")]
     [SerializeField] private float glidingVelocity = 1.4f;
@@ -68,7 +71,9 @@ public class Seal : MonoBehaviour
 
     private void OnReset()
     {
-        isDead = false;
+        isStarved = false;
+        animator.SetBool(ANIMATION_STARVED_BOOL, isStarved);
+
         isGliding = false;
         StartCoroutine(GlideToDefault());
     }
@@ -90,14 +95,16 @@ public class Seal : MonoBehaviour
 
     private void OnDeath()
     {
-        isDead = true;
+        isStarved = true;
+        animator.SetBool(ANIMATION_STARVED_BOOL, isStarved);
+
         isBeingHeld = false;
         isGliding = true;
     }
 
     private void StartPressingKey()
     {
-        if(isDead) return;
+        if(isStarved) return;
 
         StartGlide();
         isBeingHeld = true;
@@ -105,7 +112,7 @@ public class Seal : MonoBehaviour
 
     private void StopPressingKey()
     {
-        if(isDead) return;
+        if(isStarved) return;
 
         isBeingHeld = false;
     }

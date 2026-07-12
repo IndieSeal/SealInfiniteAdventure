@@ -47,6 +47,9 @@ TagManager:
   - name: Foreground
     uniqueID: 51636361
     locked: 0
+  - name: Particles
+    uniqueID: 3798621253
+    locked: 0
   m_RenderingLayers:
   - Default
   m_MigratedRenderPipelines: []
