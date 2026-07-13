@@ -10,22 +10,36 @@ public class GameUI : MonoBehaviour
     [SerializeField] private float hungryLerpSpeed = 1;
     private int highestScore;
 
+    [Space]
+    [SerializeField] private TMP_Text pressTo;
+
     void OnEnable()
     {
         GameManager.OnGameReset += SetHighestScore;
+        GameManager.OnGameStart += StartGame;
+        
         GameManager.OnScoreChanged += ScoreChanged;
     }
 
     void OnDisable()
     {
         GameManager.OnGameReset -= SetHighestScore;
+        GameManager.OnGameStart -= StartGame;
+        
         GameManager.OnScoreChanged -= ScoreChanged;
     }
 
     private void SetHighestScore()
     {
+        pressTo.text = "Press 'Space' to start game";
+        
         highestScore = SaveSystem.GetGameData().highscore;
         highScoreFishCount.text = $"{highestScore}";
+    }
+
+    private void StartGame()
+    {
+        pressTo.text = "";
     }
 
     void Update()
