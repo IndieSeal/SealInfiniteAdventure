@@ -11,10 +11,15 @@ public class Fish : MonoBehaviour, IPickable
 
     [SerializeField] private float hungerRecovery = 1.3f;
     public float Hunger => hungerRecovery;
+
+    [Header("Visuals")]
+    [SerializeField] private ParticleSystem pickupParticles;
     
     public void OnPickup()
     {
         OnPickupFish?.Invoke(this);
+
+        SharedGameObjectPool.Rent(pickupParticles, transform.position, Quaternion.identity).Play();
         SharedGameObjectPool.Return(gameObject);
     }
 }

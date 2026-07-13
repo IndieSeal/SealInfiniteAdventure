@@ -128,6 +128,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private AudioSource pickupSound;
     [SerializeField] private AudioSource damageSound1;
     [SerializeField] private AudioSource damageSound2;
+    [SerializeField] private AudioSource starvedSound;
 
     [Header("Hunger")]
     [SerializeField] private float maxHunger = 10;
@@ -142,7 +143,7 @@ public class GameManager : Singleton<GameManager>
 
     private void HandleHunger()
     {
-        Hunger -= hungerDecrease * (CurrentVelocity / 2) * Time.deltaTime;
+        Hunger -= hungerDecrease * Time.deltaTime; //* (CurrentVelocity / 3)
         if(Hunger == 0) StopGame();
     }
 
@@ -191,6 +192,8 @@ public class GameManager : Singleton<GameManager>
     private void StopGame()
     {
         currentGameState = GameState.Death;
+
+        starvedSound.PlayVaried();
 
         SaveSystem.SaveGame(new SaveSystem.SaveData(Score));
         OnGameOver?.Invoke();

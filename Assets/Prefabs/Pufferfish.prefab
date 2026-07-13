@@ -48,6 +48,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Trash
   damageOnPickup: 2
+  returnToPoolOnPickup: 1
+  pickupParticles: {fileID: 3449960561826470581, guid: 0ec8d573f010c5605aa6f0eaf08de1b8, type: 3}
 --- !u!114 &2973346717345694855
 MonoBehaviour:
   m_ObjectHideFlags: 0
