@@ -397,7 +397,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91a6d999124ef2ef1a3244f2a411075d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Orca
-  damageOnPickup: 7
+  damageOnPickup: 5
   returnToPoolOnPickup: 0
   pickupParticles: {fileID: 3449960561826470581, guid: 0ec8d573f010c5605aa6f0eaf08de1b8, type: 3}
   moveDirection: {x: -1, y: 0}

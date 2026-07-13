@@ -98,6 +98,7 @@ public class GameManager : Singleton<GameManager>
             yield return new WaitForSeconds(velocityDelay);
 
             CurrentVelocity = Mathf.Clamp(CurrentVelocity + velocityPerDelay, minVelocity, maxVelocity);
+            Debug.Log(currentVelocity);
         }
     }
 

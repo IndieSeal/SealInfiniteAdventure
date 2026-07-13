@@ -10982,15 +10982,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   menuVelocity: 0.4
   minVelocity: 1
-  maxVelocity: 3
-  velocityPerDelay: 0.05
-  velocityDelay: 3
+  maxVelocity: 3.2
+  velocityPerDelay: 0.075
+  velocityDelay: 4
   pickupSound: {fileID: 621371891}
   damageSound1: {fileID: 463212372}
   damageSound2: {fileID: 2056213396}
   starvedSound: {fileID: 1902702091}
   maxHunger: 10
-  hungerDecrease: 0.8
+  hungerDecrease: 1
 --- !u!1 &712246127
 GameObject:
   m_ObjectHideFlags: 0
