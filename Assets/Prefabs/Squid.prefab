@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Fish
   pointsOnPickup: 1
-  hungerRecovery: 1.5
+  hungerRecovery: 1.7
   pickupParticles: {fileID: 3320910158510385876, guid: 9c075f043cea05f9f9f95a5ff3e4347a, type: 3}
 --- !u!114 &8613289707870185710
 MonoBehaviour:

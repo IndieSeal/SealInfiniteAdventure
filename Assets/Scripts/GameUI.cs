@@ -16,6 +16,7 @@ public class GameUI : MonoBehaviour
     void OnEnable()
     {
         GameManager.OnGameReset += SetHighestScore;
+        GameManager.OnGameOver += OnGameOver;
         GameManager.OnGameStart += StartGame;
         
         GameManager.OnScoreChanged += ScoreChanged;
@@ -24,15 +25,19 @@ public class GameUI : MonoBehaviour
     void OnDisable()
     {
         GameManager.OnGameReset -= SetHighestScore;
+        GameManager.OnGameOver -= OnGameOver;
         GameManager.OnGameStart -= StartGame;
         
         GameManager.OnScoreChanged -= ScoreChanged;
     }
 
-    private void SetHighestScore()
+    private void OnGameOver()
     {
         pressTo.text = "Press 'Space' to start game";
-        
+    }
+
+    private void SetHighestScore()
+    {        
         highestScore = SaveSystem.GetGameData().highscore;
         highScoreFishCount.text = $"{highestScore}";
     }
