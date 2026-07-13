@@ -30,10 +30,16 @@ public class Seal : MonoBehaviour
     [SerializeField] private LayerMask groundedLayer;
 
     [Header("Visuals")]
+    [SerializeField] private ParticleSystem tiredParticles;
     [SerializeField] private Transform visualTransform;
+    [SerializeField] private Renderer visualRenderer;
     [SerializeField] private float visualRotateLerpSpeed = 15f;
     [SerializeField] private float maxAngle = 90;
     [SerializeField] private float zAngleOffset = -135;
+
+    [Header("Lose Hunger Visuals")]
+    [SerializeField] private float hitTransitionDuration = 0.2f;
+    private Coroutine loseHungerCoroutine;
 
     void Awake()
     {
@@ -54,6 +60,8 @@ public class Seal : MonoBehaviour
         SealInput.OnekeyPressed += StartPressingKey;
         SealInput.OnekeyStopped += StopPressingKey;
 
+        GameManager.OnLoseHunger += LoseHunger;
+
         GameManager.OnGameReset += OnReset;
         GameManager.OnGameStart += OnStart;
         GameManager.OnGameOver += OnDeath;
@@ -64,6 +72,8 @@ public class Seal : MonoBehaviour
         SealInput.OnekeyPressed -= StartPressingKey;
         SealInput.OnekeyStopped -= StopPressingKey;
 
+        GameManager.OnLoseHunger -= LoseHunger;
+
         GameManager.OnGameReset -= OnReset;
         GameManager.OnGameStart -= OnStart;
         GameManager.OnGameOver -= OnDeath;
@@ -71,6 +81,8 @@ public class Seal : MonoBehaviour
 
     private void OnReset()
     {
+        tiredParticles.Stop();
+
         isStarved = false;
         animator.SetBool(ANIMATION_STARVED_BOOL, isStarved);
 
@@ -93,8 +105,42 @@ public class Seal : MonoBehaviour
         }
     }
 
+    private void LoseHunger()
+    {
+        if(loseHungerCoroutine != null) StopCoroutine(loseHungerCoroutine);
+        loseHungerCoroutine = StartCoroutine(LoseHungerCoroutine());
+    }
+
+    private IEnumerator LoseHungerCoroutine()
+    {
+        visualRenderer.material.SetFloat("_HitEffectBlend", 0);
+
+        float initialTime = Time.time;
+        float duration = hitTransitionDuration / 2;
+        while (true)
+        {
+            float value = Mathf.Lerp(0, 1, (Time.time - initialTime) / duration);
+            
+            visualRenderer.material.SetFloat("_HitEffectBlend", value);
+            if(value >= 1) break;
+            yield return null;
+        }
+
+        initialTime = Time.time;
+        while (true)
+        {
+            float value = Mathf.Lerp(1, 0, (Time.time - initialTime) / duration);
+            
+            visualRenderer.material.SetFloat("_HitEffectBlend", value);
+            if(value <= 0) break;
+            yield return null;
+        }
+    }
+
     private void OnDeath()
     {
+        tiredParticles.Play();
+        
         isStarved = true;
         animator.SetBool(ANIMATION_STARVED_BOOL, isStarved);
 

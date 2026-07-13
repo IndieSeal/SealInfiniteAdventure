@@ -45,12 +45,15 @@ public class Squid : MonoBehaviour, IPoolCallbackReceiver
         RandomizeJumpTimer();
         
         rb.AddForceY(jumpForce, ForceMode2D.Impulse);
-        inkSound.Play();
+        inkSound.PlayVaried();
 
-        inkParticles.transform.SetParent(originalParent);
+        inkParticles.transform.SetParent(originalParent, true);
         inkParticles.transform.localPosition = originalPosition;
 
-        inkParticles.transform.SetParent(null);
+        inkParticles.transform.SetParent(null, true);
+        var velocity = inkParticles.velocityOverLifetime;
+        velocity.speedModifier = GameManager.Instance.CurrentVelocity;
+
         inkParticles.Play();
     }
 

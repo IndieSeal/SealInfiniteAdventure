@@ -12,6 +12,8 @@ public class GameManager : Singleton<GameManager>
         GameOver,
     }
     
+    public static event Action OnLoseHunger;
+    
     public static event Action OnGameReset;
     public static event Action OnGameStart;
     public static event Action OnGameOver;
@@ -21,15 +23,17 @@ public class GameManager : Singleton<GameManager>
     void OnEnable()
     {
         SealInput.OnekeyPressed += SwitchGameState;
+
         Fish.OnPickupFish += OnPickupFish;
-        Trash.OnPickupTrash += IncreaseHunger;
+        Trash.OnPickupTrash += OnPickupTrash;
     }
 
     void OnDisable()
     {
         SealInput.OnekeyPressed -= SwitchGameState;
+
         Fish.OnPickupFish -= OnPickupFish;
-        Trash.OnPickupTrash -= IncreaseHunger;
+        Trash.OnPickupTrash -= OnPickupTrash;
     }
 
     void Start()
@@ -54,6 +58,11 @@ public class GameManager : Singleton<GameManager>
     {
         IncreaseScore(fish.Points);
         IncreaseHunger(fish.Hunger);
+    }
+
+    private void OnPickupTrash(float hunger)
+    {        
+        DecreaseHunger(hunger);
     }
 
     #region Game's Velocity
@@ -115,6 +124,12 @@ public class GameManager : Singleton<GameManager>
     #endregion
     #region Hunger
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource pickupSound;
+    [SerializeField] private AudioSource damageSound1;
+    [SerializeField] private AudioSource damageSound2;
+
+    [Header("Hunger")]
     [SerializeField] private float maxHunger = 10;
     [SerializeField] private float hungerDecrease = 1;
     public float MaxHunger => maxHunger;
@@ -134,6 +149,19 @@ public class GameManager : Singleton<GameManager>
     private void IncreaseHunger(float hunger)
     {
         Hunger += hunger;
+        pickupSound.PlayVaried();
+    }
+
+    private void DecreaseHunger(float hunger)
+    {
+        int random = UnityEngine.Random.Range(0, 2);
+        if(random == 0) damageSound1.PlayVaried();
+        else if(random == 1) damageSound2.PlayVaried();
+        else damageSound1.PlayVaried();
+        
+        Hunger -= hunger;
+
+        OnLoseHunger?.Invoke();
     }
 
     #endregion

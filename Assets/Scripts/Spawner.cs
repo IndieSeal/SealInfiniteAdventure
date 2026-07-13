@@ -8,11 +8,15 @@ public class SpawnContent
 {
     public List<GameObject> prefabs = new List<GameObject>();
 
+    public Vector2 offset;
+
     [Header("Spawn Delay")]
     [Tooltip("If true, the sea's velocity will affect the spawning time of this")] public bool seaAffected = true;
     [Space]
     public float minSpawnTime = 1;
     public float maxSpawnTime = 2;
+
+    [Tooltip("Which sea velocity you have to be in for it to start spawning")] public float spawnAfterVelocity = 0;
 
     public GameObject Prefab => prefabs.GetRandomOf();
     public float Delay => Random.Range(minSpawnTime, maxSpawnTime) / (!seaAffected ? 1 : GameManager.Instance.CurrentVelocity);
@@ -57,8 +61,10 @@ public class Spawner : MonoBehaviour
     {
         while (true)
         {
-            instances.Add(SharedGameObjectPool.Rent(spawn.Prefab, Utilities.GetRandomPoint(startTransform.position, endTransform.position), Quaternion.identity));
             yield return new WaitForSeconds(spawn.Delay);
+
+            if(GameManager.Instance.CurrentVelocity < spawn.spawnAfterVelocity) continue;
+            instances.Add(SharedGameObjectPool.Rent(spawn.Prefab, Utilities.GetRandomPoint(startTransform.position, endTransform.position) + spawn.offset, Quaternion.identity));
         }
     }
 

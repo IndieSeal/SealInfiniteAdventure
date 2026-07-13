@@ -7,12 +7,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WaterElement
+  m_Name: StarUI
   m_Shader: {fileID: 4800000, guid: a36b7719ff0465b42ab1407d67672c5f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - HITEFFECT_ON
+  - DOODLE_ON
   - WARP_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
@@ -105,9 +105,9 @@ Material:
     - _ColorSwapRedLuminosity: 0.5
     - _Contrast: 1
     - _CullingOption: 0
-    - _DistortAmount: 0.08
-    - _DistortTexXSpeed: 37.9
-    - _DistortTexYSpeed: 0
+    - _DistortAmount: 0.5
+    - _DistortTexXSpeed: 5
+    - _DistortTexYSpeed: 5
     - _EditorDrawers: 6
     - _FadeAmount: -0.1
     - _FadeBurnGlow: 2
@@ -131,16 +131,16 @@ Material:
     - _GradIsRadial: 0
     - _GrassManualAnim: 1
     - _GrassManualToggle: 0
-    - _GrassRadialBend: 0
+    - _GrassRadialBend: 0.1
     - _GrassSpeed: 2
-    - _GrassWind: 8.3
+    - _GrassWind: 20
     - _GreyscaleBlend: 1
     - _GreyscaleLuminosity: 0
     - _GreyscaleOutline: 0
-    - _HandDrawnAmount: 10.8
-    - _HandDrawnSpeed: 15
-    - _HitEffectBlend: 0
-    - _HitEffectGlow: 1
+    - _HandDrawnAmount: 2.3
+    - _HandDrawnSpeed: 5
+    - _HitEffectBlend: 1
+    - _HitEffectGlow: 5
     - _HologramBlend: 1
     - _HologramMaxAlpha: 0.75
     - _HologramMinAlpha: 0.1
@@ -162,7 +162,7 @@ Material:
     - _MyDstMode: 10
     - _MySrcMode: 5
     - _NegativeAmount: 1
-    - _OffsetUvX: -0.44
+    - _OffsetUvX: 0
     - _OffsetUvY: 0
     - _OnlyInnerOutline: 0
     - _OnlyOutline: 0
@@ -209,9 +209,9 @@ Material:
     - _TwistUvPosY: 0.5
     - _TwistUvRadius: 0.75
     - _WarpScale: 0.5
-    - _WarpSpeed: 6
-    - _WarpStrength: 0.005
-    - _WaveAmount: 25
+    - _WarpSpeed: 8
+    - _WarpStrength: 0.001
+    - _WaveAmount: 7
     - _WaveSpeed: 10
     - _WaveStrength: 7.5
     - _WaveX: 0
@@ -221,7 +221,7 @@ Material:
     - _ZoomUvAmount: 0.5
     m_Colors:
     - _AlphaOutlineColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 0.8632076, g: 1, b: 0.9901284, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorChangeNewCol: {r: 1, g: 1, b: 0, a: 1}
     - _ColorChangeNewCol2: {r: 1, g: 1, b: 0, a: 1}
     - _ColorChangeNewCol3: {r: 1, g: 1, b: 0, a: 1}
