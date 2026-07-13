@@ -15,9 +15,10 @@ External Packages used:<br>
   <li><b>Shaders: </b>https://assetstore.unity.com/packages/vfx/shaders/all-in-1-sprite-shader-156513 [Not included in Assets as it is paid, get your own license]</li>
   <li><b>Better WebGL Builder: </b>https://seansleblanc.itch.io/better-minimal-webgl-template</li>
   <li><b>GameObject Pooling: </b>https://github.com/AnnulusGames/uPools</li>
+  <li><b>Sound Effects: </b><a href="https://github.com/IndieSeal/SealInfiniteAdventure/blob/main/Assets/Sound/Credits.md">Credits</li>
 </ul>
 
 <br>
 
 ## License
-[CLICK ON ME](LICENSE.md)
+[CLICK ON ME](LICENSE)
