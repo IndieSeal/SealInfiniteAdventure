@@ -21,4 +21,4 @@ External Packages used:<br>
 <br>
 
 ## License
-[CLICK ON ME](LICENSE)
+[CLICK ON ME](LICENSE.md)
